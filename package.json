@@ -12,5 +12,13 @@
   "type": "commonjs",
   "dependencies": {
     "express": "^5.2.1"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/masab-abdullah/node-basic.git"
+  },
+  "bugs": {
+    "url": "https://github.com/masab-abdullah/node-basic/issues"
+  },
+  "homepage": "https://github.com/masab-abdullah/node-basic#readme"
 }
