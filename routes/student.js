@@ -1,38 +1,89 @@
 const express = require("express");
-
 const router = express.Router();
 
-router.get("/info", (req, res) => {
+const db = require("../database/connection");
+
+// =========================
+// 1. API CHECK
+// =========================
+router.get("/student-api-check", (req, res) => {
     res.json({
         message: "Student API is working"
     });
 });
 
-router.get("/students", (req, res) => {
-    res.json([
-        { id: 1, name: "Masab", age: 19, course: "BSCS" },
-        { id: 2, name: "Ali", age: 20, course: "BSCS" }
-    ]);
+// =========================
+// 2. GET ALL STUDENTS
+// =========================
+router.get("/get-all-students", (req, res) => {
+
+    const sql = "SELECT * FROM student";
+
+    db.query(sql, (err, result) => {
+
+        if (err) {
+            return res.status(500).json({
+                error: err
+            });
+        }
+
+        res.json(result);
+
+    });
+
 });
 
-router.post("/students", (req, res) => {
-    res.json({
-        message: "Student created successfully"
+// =========================
+// 3. ADD STUDENT
+// =========================
+router.post("/add-student", (req, res) => {
+
+    const { name, age, email, course } = req.body;
+
+    const sql = "INSERT INTO student (name, age, email, course) VALUES (?, ?, ?, ?)";
+
+    db.query(sql, [name, age, email, course], (err, result) => {
+
+        if (err) {
+            return res.status(500).json({
+                error: err
+            });
+        }
+
+        res.json({
+            message: "Student added successfully",
+            studentId: result.insertId
+        });
+
     });
+
 });
 
-router.patch("/students/:id", (req, res) => {
-    res.json({
-        message: "Student updated successfully",
-        student_id: req.params.id
-    });
-});
+// =========================
+// 4. UPDATE STUDENT
+// =========================
+router.patch("/update-student/:id", (req, res) => {
 
-router.delete("/students/:id", (req, res) => {
-    res.json({
-        message: "Student deleted successfully",
-        student_id: req.params.id
+    const id = req.params.id;
+
+    const { name, age, course } = req.body;
+
+    const sql = "UPDATE student SET name = ?, age = ?, course = ? WHERE id = ?";
+
+    db.query(sql, [name, age, course, id], (err, result) => {
+
+        if (err) {
+            return res.status(500).json({
+                error: err
+            });
+        }
+
+        res.json({
+            message: "Student updated successfully"
+        });
+
     });
+
 });
 
 module.exports = router;
