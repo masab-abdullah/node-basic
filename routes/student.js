@@ -63,15 +63,21 @@ router.post("/add-student", (req, res) => {
 // 4. UPDATE STUDENT
 // =========================
 router.patch("/update-student/:id", (req, res) => {
-
     const id = req.params.id;
 
-    const { name, age, course } = req.body;
+    const { name, age, email, course } = req.body;
 
-    const sql = "UPDATE student SET name = ?, age = ?, course = ? WHERE id = ?";
+    const sql = `
+        UPDATE student 
+        SET 
+            name = COALESCE(?, name),
+            age = COALESCE(?, age),
+            email = COALESCE(?, email),
+            course = COALESCE(?, course)
+        WHERE id = ?
+    `;
 
-    db.query(sql, [name, age, course, id], (err, result) => {
-
+    db.query(sql, [name, age, email, course, id], (err, result) => {
         if (err) {
             return res.status(500).json({
                 error: err
@@ -81,9 +87,7 @@ router.patch("/update-student/:id", (req, res) => {
         res.json({
             message: "Student updated successfully"
         });
-
     });
-
 });
 
 module.exports = router;

@@ -1,4 +1,5 @@
 const express = require("express");
+require("./database/postgres-connection");
 const swaggerUi = require("swagger-ui-express");
 
 const studentRoutes = require("./routes/student");
@@ -92,16 +93,18 @@ const swaggerDocument = {
               schema: {
                 type: "object",
                 properties: {
-                  name: { type: "string" },
-                  age: { type: "integer" },
-                  course: { type: "string" }
-                }
-              },
-              example: {
-                name: "Masab Abdullah",
-                age: 20,
-                course: "Software Engineering"
-              }
+  name: { type: "string" },
+  age: { type: "integer" },
+  email: { type: "string" },
+  course: { type: "string" }
+}
+},
+example: {
+    name: "Masab Abdullah",
+    age: 20,
+    email: "newemail@gmail.com",
+    course: "Software Engineering"
+}
             }
           }
         },
